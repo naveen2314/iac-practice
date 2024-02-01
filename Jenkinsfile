@@ -1,26 +1,25 @@
 pipeline {
-
     parameters {
         booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
-    } 
+    }
+    
     environment {
         AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
     }
+    agent  any
 
-   agent  any
     stages {
-        stage('checkout') {
-            steps {
-                 script{
-                        dir("terraform")
-                        {
-                            git clone  "https://github.com/naveen2314/iac-practice.git"
-                        }
-                    }
+        stage(" Git Checkout"){
+            steps{
+                script {
+                    git branch: 'main'
+                    url: "https://github.com/naveen2314/iac-practice.git"
                 }
+                
             }
-
+        }
+    
         stage('Plan') {
             steps {
                 sh 'pwd;cd terraform/ ; terraform init'
@@ -50,5 +49,4 @@ pipeline {
             }
         }
     }
-
-  }
+}
